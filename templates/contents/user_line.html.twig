@@ -1,0 +1,8 @@
+<form action="/user/delete" method="post" enctype="multipart/form-data">
+    <input name="user_id" type="hidden" value={{ user.user_id }}>
+    <label for={{ user.user_id }}>
+        <a href='/user/show{{ user.user_id }}'>
+        {{ user.first_name }} {{ user.last_name }}
+    </label>
+    <input id={{ user.user_id }} type="submit" value="delete">
+</form>

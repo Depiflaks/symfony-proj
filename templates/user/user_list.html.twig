@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+
+{% block title %}User List{% endblock %}
+
+{% block head %}
+    {# <link rel="stylesheet" href="css/registration/registration.css"/> #}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <h1>User List</h1>
+    <h2>Count of user: {{ user_list|length }}</h2>
+    <ul>
+    {% for user in user_list %}
+        <li>
+            {% include 'contents/user_line.html.twig' with user %}
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

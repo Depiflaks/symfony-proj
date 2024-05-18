@@ -19,7 +19,7 @@ class UserTable
         VALUES (:first_name, :last_name, :middle_name, :gender, 
         :birth_date, :email, :phone);';
         $statement = $this->connection->prepare($query);
-        var_dump($this->parseDateTime($user->getBirthDate()));
+        //var_dump($this->parseDateTime($user->getBirthDate()));
         $statement->execute([
             ':first_name' => $user->getFirstName(),
             ':last_name' => $user->getLastName(),
@@ -57,7 +57,7 @@ class UserTable
         return (int)$this->connection->lastInsertId();
     }
 
-    public function deleteUser($id) 
+    public function deleteUser(int $id): void
     {
         $query = 'DELETE FROM user
         WHERE user_id=:user_id';
@@ -67,7 +67,7 @@ class UserTable
         ]);
     }
 
-    public function addAvatarPath(string $path, int $id) 
+    public function addAvatarPath(string $path, int $id): void
     {
         $query = 'UPDATE `user` SET avatar_path=:avatar_path
         WHERE user_id=:user_id';
@@ -104,7 +104,7 @@ class UserTable
         return null;
     }
 
-    private function createUserFromRow(array $row): User
+    private function createUserFromRow(array $row): UserInterface
     {
         return new User(
             $row['user_id'],

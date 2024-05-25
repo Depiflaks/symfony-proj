@@ -7,16 +7,11 @@ namespace App\Model;
 
 class User implements UserInterface
 {
-    public function __construct(
-        private ?int $user_id, 
-        private string $first_name, 
-        private string $last_name, 
-        private ?string $middle_name, 
-        private string $gender, 
-        private ?string $birth_date, 
-        private string $email, 
-        private ?string $phone, 
-        private ?string $avatar_path)
+    public function __construct(private ?int $user_id, private string $first_name, 
+                                private string $last_name, private ?string $middle_name, 
+                                private string $gender, private ?string $birth_date, 
+                                private string $email, private ?string $phone, 
+                                private ?string $avatar_path)
     {
 
     }

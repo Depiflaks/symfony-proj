@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Entity\User" table="user">
+
+        <id name="user_id" type="integer" column="user_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="first_name" column="first_name" type="string" length="200" nullable="false" />
+        <field name="last_name" column="last_name" type="string" length="200" nullable="false" />
+        <field name="middle_name" column="middle_name" type="string" length="200" nullable="false" />
+        <field name="gender" column="gender" type="string" length="200" nullable="false" />
+        <field name="birth_date"  column="birth_date" type="string" nullable="false" />
+        
+        <field name="email" column="email" type="string" length="200" nullable="false" />
+        <field name="phone" column="phone" type="string" length="200" nullable="true" />
+        <field name="avatar_path" column="avatar_path" type="string" length="200" nullable="true" />
+
+    </entity>
+
+</doctrine-mapping>

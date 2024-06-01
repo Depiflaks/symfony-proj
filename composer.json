@@ -7,6 +7,7 @@
         "php": ">=7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "doctrine/annotations": "*",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/migrations": "^3.7",
@@ -15,7 +16,9 @@
         "symfony/dotenv": "5.4.*",
         "symfony/flex": "^1.17|^2",
         "symfony/framework-bundle": "5.4.*",
+        "symfony/maker-bundle": "^1.50",
         "symfony/runtime": "5.4.*",
+        "symfony/twig-bundle": "5.4.*",
         "symfony/yaml": "5.4.*",
         "twig/twig": "^3.0"
     },

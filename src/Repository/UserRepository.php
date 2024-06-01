@@ -3,132 +3,41 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\UserInterface;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 
 class UserRepository
 {
-    private const MYSQL_DATETIME_FORMAT = 'Y-m-d';
+    private EntityManagerInterface $entityManager;
+    private EntityRepository $repository;
 
-    public function __construct(private \PDO $connection)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        
+        $this->entityManager = $entityManager;
+        $this->repository = $entityManager->getRepository(User::class);
     }
 
-    public function addUser(UserInterface $user): int
+    public function findById(int $id): ?User
     {
-        $query = 'INSERT INTO `user` (`first_name`, `last_name`, `middle_name`, 
-        `gender`, `birth_date`, `email`, `phone`)
-        VALUES (:first_name, :last_name, :middle_name, :gender, 
-        :birth_date, :email, :phone);';
-        $statement = $this->connection->prepare($query);
-        //var_dump($this->parseDateTime($user->getBirthDate()));
-        $statement->execute([
-            ':first_name' => $user->getFirstName(),
-            ':last_name' => $user->getLastName(),
-            ':middle_name' => $user->getMiddleName(), 
-            ':gender' => $user->getGender(), 
-            ':birth_date' => $user->getBirthDate(), 
-            ':email' => $user->getEmail(), 
-            ':phone' => $user->getPhone(), 
-        ]);
-        return (int)$this->connection->lastInsertId();
+        return $this->repository->findOneBy(['user_id' => (string)$id]);
     }
 
-    public function updateUser(UserInterface $user): int
+    public function store(User $user): int
     {
-        $query = 'UPDATE `user` SET 
-        first_name=:first_name, 
-        last_name=:last_name, 
-        middle_name=:middle_name, 
-        gender=:gender, 
-        birth_date=:birth_date, 
-        email=:email, 
-        phone=:phone 
-        WHERE user_id=:user_id';
-        $statement = $this->connection->prepare($query);
-        $statement->execute([
-            ':user_id' => $user->getId(),
-            ':first_name' => $user->getFirstName(),
-            ':last_name' => $user->getLastName(),
-            ':middle_name' => $user->getMiddleName(), 
-            ':gender' => $user->getGender(), 
-            ':birth_date' => $user->getBirthDate(), 
-            ':email' => $user->getEmail(), 
-            ':phone' => $user->getPhone(), 
-        ]);
-        return (int)$this->connection->lastInsertId();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return $user->getId();
     }
 
-    public function deleteUser(int $id): void
+    public function delete(User $user): void
     {
-        $query = 'DELETE FROM user
-        WHERE user_id=:user_id';
-        $statement = $this->connection->prepare($query);
-        $statement->execute([
-            ':user_id' => $id
-        ]);
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
     }
 
-    public function addAvatarPath(string $path, int $id): void
+    public function listAll(): array
     {
-        $query = 'UPDATE `user` SET avatar_path=:avatar_path
-        WHERE user_id=:user_id';
-        $statement = $this->connection->prepare($query);
-        $statement->execute([
-            ':avatar_path' => $path,
-            ':user_id' => $id,
-        ]);
-    }
-
-    public function getAllUsers(): array
-    {
-        $query = "SELECT * FROM `user`";
-        $statement = $this->connection->prepare($query);
-        $statement->execute();
-        $res = [];
-        while ($row = $statement->fetch(\PDO::FETCH_ASSOC))
-        {
-            array_push($res, $this->createUserFromRow($row));
-        }
-        return $res;
-    }
-
-    public function find(int $user_id): ?UserInterface
-    {
-        $query = "SELECT `user_id`, `first_name`, `last_name`, `middle_name`, `gender`, `birth_date`, `email`, `phone`, `avatar_path`
-          FROM `user`
-          WHERE user_id = :user_id";
-        $statement = $this->connection->prepare($query);
-        $statement->execute([':user_id' => $user_id]);
-        if ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
-            return $this->createUserFromRow($row);
-        }
-        return null;
-    }
-
-    private function createUserFromRow(array $row): UserInterface
-    {
-        return new User(
-            $row['user_id'],
-            $row['first_name'], 
-            $row['last_name'],
-            $row['middle_name'],
-            $row['gender'],
-            $row['birth_date'],
-            $row['email'],
-            $row['phone'],
-            $row['avatar_path'],
-        );
-    }
-
-    private function parseDateTime(string $value): \DateTimeImmutable
-    {
-        $result = \DateTimeImmutable::createFromFormat(self::MYSQL_DATETIME_FORMAT, $value);
-        if (!$result)
-        {
-            throw new \InvalidArgumentException("Invalid datetime value '$value'");
-        }
-        return $result;
+        return $this->repository->findAll();
     }
 }

@@ -7,14 +7,9 @@ add_user:
     path: /user/add_user
     methods: POST
     controller: App\Controller\UserController::saveUserToDatabase
-
-test:
-    path: /test
-    methods: GET
-    controller: App\Controller\UserController::testingTwig
     
 show_user:
-    path: /user/show{userId}
+    path: /user/show/{userId}
     controller: App\Controller\UserController::showUser
     methods: GET
 
